@@ -23,6 +23,7 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 from sklearn.metrics import f1_score, confusion_matrix
 from keras.models import load_model
 import math
+import argparse
 
 import numpy as np
 import time
@@ -32,18 +33,41 @@ import urllib.request
 import ftplib
 
 
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='args for the training script',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('--wv_len', default=300, type=int, help='Dimension of the dense embedding')
+    parser.add_argument('--batch_size', default=16, type=int, help='Batch size')
+    parser.add_argument('--epochs', default=100, type=int, help='Number of epochs')
+    parser.add_argument('--filter_sizes', nargs='*', default=[3, 4, 5], type=int, help='Filter sizes')
+    parser.add_argument('--num_filters', nargs='*', default=[100, 100, 100], type=int, help='Number of filters')
+    parser.add_argument('--concat_dropout_prob', default=0.5, type=float, help='Concatenate dropout probability')
+    parser.add_argument('--emb_l2', default=0.001, type=float, help='Embedding l2 regularization factor')
+    parser.add_argument('--optimizer', default='adam', type=str, help='Optimizer')
+
+    args = parser.parse_args()
+    print(args)
+
+    return args
+
+
+
 def main():
+    args = parse_arguments()
+
     # mtcnn parameters
-    wv_len = 300
+    wv_len = args.wv_len
     seq_len = 1500
-    batch_size = 16
-    epochs = 100
-    filter_sizes = [3, 4, 5]
-    num_filters = [100, 100, 100]
-    concat_dropout_prob = 0.5
-    emb_l2 = 0.001
+    batch_size = args.batch_size
+    epochs = args.epochs
+    filter_sizes = args.filter_sizes
+    num_filters = args.num_filters
+    concat_dropout_prob = args.concat_dropout_prob
+    emb_l2 = args.emb_l2
     w_l2 = 0.01
-    optimizer = 'adam'
+    optimizer = args.optimizer
     tasks = ['site', 'histology']
     num_tasks = len(tasks)
 
