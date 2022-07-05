@@ -109,7 +109,7 @@ def main():
     print("filter_sizes:", filter_sizes)
     print("num_filters:", num_filters)
     print("concat_dropout_prob:", concat_dropout_prob)
-    
+
     seq_len = 1500
     w_l2 = 0.01
     tasks = ['site', 'histology']
