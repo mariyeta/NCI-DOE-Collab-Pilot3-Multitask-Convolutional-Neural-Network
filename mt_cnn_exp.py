@@ -46,28 +46,72 @@ def parse_arguments():
     parser.add_argument('--concat_dropout_prob', default=0.5, type=float, help='Concatenate dropout probability')
     parser.add_argument('--emb_l2', default=0.001, type=float, help='Embedding l2 regularization factor')
     parser.add_argument('--optimizer', default='adam', type=str, help='Optimizer')
+    parser.add_argument("--input_conf", default=None, type=str, help="Input JSON file containing training parameters")
 
     args = parser.parse_args()
-    print(args)
 
     return args
 
 
 
-def main():
+def load_arguments():
     args = parse_arguments()
 
+    if args.input_conf:
+        input_conf = args.input_conf
+        f = open(input_conf)
+        input_dict = json.load(f)
+        if (input_dict["epochs"]):
+            epochs = input_dict["epochs"]
+        if (input_dict["batch_size"]):
+            batch_size = input_dict["batch_size"]
+        if (input_dict["optimizer"]):
+            optimizer = input_dict["optimizer"]
+        if (input_dict["wv_len"]):
+            wv_len = input_dict["wv_len"]
+        if (input_dict["concat_dropout_prob"]):
+            concat_dropout_prob = input_dict["concat_dropout_prob"]
+        if (input_dict["emb_l2"]):
+            emb_l2 = input_dict["emb_l2"]
+        if (input_dict["filter_sizes"]):
+            filter_sizes = input_dict["filter_sizes"]
+        if (input_dict["num_filters"]):
+            num_filters = input_dict["num_filters"]
+    if (args.epochs):
+        epochs = args.epochs
+    if (args.batch_size):
+        batch_size = args.batch_size
+    if (args.optimizer):
+        optimizer = args.optimizer
+    if (args.wv_len):
+        wv_len = args.wv_len
+    if (args.concat_dropout_prob):
+        concat_dropout_prob = args.concat_dropout_prob
+    if (args.emb_l2):
+        emb_l2 = args.emb_l2
+    if (args.filter_sizes):
+        filter_sizes = args.filter_sizes
+    if (args.num_filters):
+        num_filters = args.num_filters
+
+    return batch_size, epochs, wv_len, optimizer, num_filters, filter_sizes, emb_l2, concat_dropout_prob
+
+
+def main():
     # mtcnn parameters
-    wv_len = args.wv_len
+    batch_size, epochs, wv_len, optimizer, num_filters, filter_sizes, emb_l2, concat_dropout_prob = load_arguments()
+
+    print("batch_size:", batch_size)
+    print("epochs:", epochs)
+    print("wv_len:", wv_len)
+    print("optimizer:", optimizer)
+    print("emb_l2:", emb_l2)
+    print("filter_sizes:", filter_sizes)
+    print("num_filters:", num_filters)
+    print("concat_dropout_prob:", concat_dropout_prob)
+    
     seq_len = 1500
-    batch_size = args.batch_size
-    epochs = args.epochs
-    filter_sizes = args.filter_sizes
-    num_filters = args.num_filters
-    concat_dropout_prob = args.concat_dropout_prob
-    emb_l2 = args.emb_l2
     w_l2 = 0.01
-    optimizer = args.optimizer
     tasks = ['site', 'histology']
     num_tasks = len(tasks)
 
