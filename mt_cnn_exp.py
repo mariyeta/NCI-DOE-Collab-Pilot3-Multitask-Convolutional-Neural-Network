@@ -61,38 +61,46 @@ def load_arguments():
         input_conf = args.input_conf
         f = open(input_conf)
         input_dict = json.load(f)
-        if (input_dict["epochs"]):
+        
+        if "epochs" in input_dict:
             epochs = input_dict["epochs"]
-        if (input_dict["batch_size"]):
+        else:
+            epochs = args.epochs
+
+        if "batch_size" in input_dict:
             batch_size = input_dict["batch_size"]
-        if (input_dict["optimizer"]):
+        else:
+            batch_size = args.batch_size
+
+        if "optimizer" in input_dict:
             optimizer = input_dict["optimizer"]
-        if (input_dict["wv_len"]):
+        else:
+            optimizer = args.optimizer
+
+        if "wv_len" in input_dict:
             wv_len = input_dict["wv_len"]
-        if (input_dict["concat_dropout_prob"]):
+        else:
+            wv_len = args.wv_len
+
+        if "concat_dropout_prob" in input_dict:
             concat_dropout_prob = input_dict["concat_dropout_prob"]
-        if (input_dict["emb_l2"]):
+        else:
+            concat_dropout_prob = args.concat_dropout_prob
+
+        if "emb_l2" in input_dict:
             emb_l2 = input_dict["emb_l2"]
-        if (input_dict["filter_sizes"]):
+        else:
+            emb_l2 = args.emb_l2
+
+        if "filter_sizes" in input_dict:
             filter_sizes = input_dict["filter_sizes"]
-        if (input_dict["num_filters"]):
+        else:
+            filter_sizes = args.filter_sizes
+
+        if "num_filters" in input_dict:
             num_filters = input_dict["num_filters"]
-    if (args.epochs):
-        epochs = args.epochs
-    if (args.batch_size):
-        batch_size = args.batch_size
-    if (args.optimizer):
-        optimizer = args.optimizer
-    if (args.wv_len):
-        wv_len = args.wv_len
-    if (args.concat_dropout_prob):
-        concat_dropout_prob = args.concat_dropout_prob
-    if (args.emb_l2):
-        emb_l2 = args.emb_l2
-    if (args.filter_sizes):
-        filter_sizes = args.filter_sizes
-    if (args.num_filters):
-        num_filters = args.num_filters
+        else:
+            num_filters = args.num_filters
 
     return batch_size, epochs, wv_len, optimizer, num_filters, filter_sizes, emb_l2, concat_dropout_prob
 
