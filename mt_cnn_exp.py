@@ -24,6 +24,7 @@ from sklearn.metrics import f1_score, confusion_matrix
 from keras.models import load_model
 import math
 import argparse
+import json
 
 import numpy as np
 import time
@@ -61,7 +62,7 @@ def load_arguments():
         input_conf = args.input_conf
         f = open(input_conf)
         input_dict = json.load(f)
-        
+
         if "epochs" in input_dict:
             epochs = input_dict["epochs"]
         else:
