@@ -25,6 +25,7 @@ from keras.models import load_model
 import math
 import argparse
 import json
+import sys
 
 import numpy as np
 import time
@@ -56,54 +57,29 @@ def parse_arguments():
 
 
 def load_arguments():
-    args = parse_arguments()
+    command_arguments = sys.argv
+    clean_command_arguments = [x.split("--").pop() for x in command_arguments]
 
+    parameter_list = ['batch_size', 'epochs', 'wv_len', 'optimizer', 'num_filters',
+                      'filter_sizes', 'emb_l2', 'concat_dropout_prob']
+    args = parse_arguments()
+    input_dict = {}
     if args.input_conf:
         input_conf = args.input_conf
         f = open(input_conf)
         input_dict = json.load(f)
 
-        if "epochs" in input_dict:
-            epochs = input_dict["epochs"]
-        else:
-            epochs = args.epochs
+    loc_var = locals()
 
-        if "batch_size" in input_dict:
-            batch_size = input_dict["batch_size"]
+    for p in parameter_list:
+        if p in clean_command_arguments:
+            loc_var[p] = getattr(args, p)
+        elif p in input_dict:
+            loc_var[p] = input_dict[p]
         else:
-            batch_size = args.batch_size
+            loc_var[p] = getattr(args, p)
 
-        if "optimizer" in input_dict:
-            optimizer = input_dict["optimizer"]
-        else:
-            optimizer = args.optimizer
-
-        if "wv_len" in input_dict:
-            wv_len = input_dict["wv_len"]
-        else:
-            wv_len = args.wv_len
-
-        if "concat_dropout_prob" in input_dict:
-            concat_dropout_prob = input_dict["concat_dropout_prob"]
-        else:
-            concat_dropout_prob = args.concat_dropout_prob
-
-        if "emb_l2" in input_dict:
-            emb_l2 = input_dict["emb_l2"]
-        else:
-            emb_l2 = args.emb_l2
-
-        if "filter_sizes" in input_dict:
-            filter_sizes = input_dict["filter_sizes"]
-        else:
-            filter_sizes = args.filter_sizes
-
-        if "num_filters" in input_dict:
-            num_filters = input_dict["num_filters"]
-        else:
-            num_filters = args.num_filters
-
-    return batch_size, epochs, wv_len, optimizer, num_filters, filter_sizes, emb_l2, concat_dropout_prob
+    return loc_var['batch_size'], loc_var['epochs'], loc_var['wv_len'], loc_var['optimizer'], loc_var['num_filters'], loc_var['filter_sizes'], loc_var['emb_l2'], loc_var['concat_dropout_prob']
 
 
 def main():
